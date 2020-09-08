@@ -39,6 +39,10 @@ class Booking
             throw new PatientNotFound('No record found for ' . $patientName);
         }
 
+        if (strtotime($startDatetime) < time()) {
+            throw new Unavailable('Availability cannot be in the past: ' . $startDatetime);
+        }
+
         // validate it exists and lock it
         $availability = AvailabilityModel::select('availability.id')
             ->join('provider', 'provider.id', '=', 'availability.provider_id')
