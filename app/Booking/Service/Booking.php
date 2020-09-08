@@ -81,12 +81,14 @@ class Booking
             'availability.start_datetime',
             'availability.end_datetime'
         ];
+
         $availabilitiesQuery = \App\Booking\Model\Availability::select($cols)
             ->join('provider', 'provider.id', '=', 'availability.provider_id')
             ->where(DB::raw('CONCAT(provider.first_name, provider.last_name)'),  $providerName)
             ->where('availability.clinic_id',   Clinic::DEFAULT_ID)
             ->where('availability.start_datetime', '>=', $startDatetime)
             ->where('availability.start_datetime', '<=', $endDatetime)
+            ->whereRaw('availability.start_datetime > NOW()')
             ->whereNull('patient_id')
         ;
 
